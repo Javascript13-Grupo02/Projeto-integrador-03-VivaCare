@@ -1,6 +1,7 @@
 import { Transform, TransformFnParams } from "class-transformer";
-import { IsEmail, IsNotEmpty } from "class-validator";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { IsEmail, IsMobilePhone, IsNotEmpty } from "class-validator";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Apolice } from "../../apolice/entities/apolice.entity";
 
 @Entity({name: 'tb_clientes'})
 export class Cliente {
@@ -19,6 +20,12 @@ export class Cliente {
   email: string
 
   @Transform(({value}: TransformFnParams) => value?.trim())
+  @IsMobilePhone(
+  'pt-BR',
+  { strictMode: true },
+  {
+    message: 'Número de telefone inválido!',
+  })
   @Column({length: 50, nullable: false})
   telefone: string
 
@@ -30,5 +37,8 @@ export class Cliente {
   foto: string
   
   // relacionamento com apolice
+
+  @OneToMany(() => Apolice, (apolice) => apolice.cliente)
+  apolice: Apolice[];
 
 }

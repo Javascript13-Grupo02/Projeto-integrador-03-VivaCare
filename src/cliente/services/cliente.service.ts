@@ -13,9 +13,9 @@ export class ClienteService {
 
     async findAll(): Promise<Cliente[]> {
         return await this.clienteRepository.find({
-            // relations:{
-            //     produto: true
-            // }
+            relations:{
+                apolice: true
+            }
         });
     }
 
@@ -25,9 +25,9 @@ export class ClienteService {
             where: {
                 id
             },
-            // relations:{
-            //     produto: true
-            // }
+            relations:{
+                apolice: true
+            }
         });
 
         if (!cliente)
@@ -42,21 +42,27 @@ export class ClienteService {
             where: {
                 nome: ILike(`%${nome}%`)
             },
-            // relations:{
-            //     produto: true
-            // }
+            relations:{
+                apolice: true
+            }
         })
     }
 
-    async findByEmail(email: string): Promise<Cliente | null> {
-        return await this.clienteRepository.findOne({
+    async findByEmail(email: string): Promise<Cliente> {
+        let resultado = await this.clienteRepository.findOne({
             where: {
                 email: ILike(`%${email}%`)
             },
-            // relations:{
-            //     produto: true
-            // }
+            relations:{
+                apolice: true
+            }
         })
+
+        if(!resultado) 
+
+          throw new HttpException('Cliente não encontrado!', HttpStatus.NOT_FOUND);
+        
+        return resultado
     }
 
     async create(cliente: Cliente): Promise<Cliente> {
@@ -67,10 +73,16 @@ export class ClienteService {
         if(idade < 18)
             throw new HttpException("Para contratar uma apólice é preciso ser maior de idade.", HttpStatus.BAD_REQUEST);
 
-                const buscaCliente = await this.findByEmail(cliente.email);
+        const buscaCliente = await this.clienteRepository.findOne({
+          where: {
+            email: ILike(`%${cliente.email}%`)
+        }
+        });
 
-        if (buscaCliente)
-            throw new HttpException("O Cliente já existe!", HttpStatus.BAD_REQUEST);
+        if (buscaCliente) {
+
+          throw new HttpException("O Cliente já existe!", HttpStatus.BAD_REQUEST);
+        }
 
         return await this.clienteRepository.save(cliente);
     }

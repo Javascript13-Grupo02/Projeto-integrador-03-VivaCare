@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClienteModule } from './cliente/cliente.module';
+import { ApoliceModule } from './apolice/apolice.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { ClienteModule } from './cliente/cliente.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    ClienteModule
+    ClienteModule,
+    ApoliceModule
   ],
   controllers: [],
   providers: [],
