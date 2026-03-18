@@ -1,98 +1,173 @@
+# VivaCare - Gerenciador de Seguros de Vida
+------
+<div align="center">
+    <img src="https://ik.imagekit.io/vjqejp2vh/proj03/VivaCare%20Clara.png" title="source: ImageKit" width="40%"/>
+</div>
+
+<div align="center">
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white" alt="NestJS" />
+  <img src="https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
+  <img src="https://img.shields.io/badge/TypeORM-FE0902?style=for-the-badge&logo=typeorm&logoColor=white" alt="TypeORM" />
+</div>
+
+
+
+## 1. Descrição
+
+O **VivaCare** é uma solução digital desenvolvida para descomplicar a gestão de seguros de vida. O foco do projeto é substituir a burocracia e as "letras miúdas" por uma experiência fluida e intuitiva, permitindo que, os usuários (corretores) gerenciem os planos de cobertura com eficiência.
+
+------
+
+## 2. Sobre esta API
+
+A API foi construída seguindo os princípios da arquitetura de MVC com **NestJS**, focando em tipagem forte com TypeScript e manutenibilidade. Ele funciona como um gerenciador de lista de clientes e apólices.
+
+### 2.1. Principais Funcionalidades
+
+📂 **Gerenciamento de Clientes:** Cadastro, listagem, atualização e exclusão de clientes.
+📈 **Gerenciamento de Apólices:** Cadastro com planos, preços, datas de início/fim e dependentes.
+🔗 **Relacionamento entre  Usuário/Cliente e Apólice:** Garante que quando pesquisamos por um usuário (corretor) ou por um cliente sejam retornadas na pesquisa também as apólices associadas. 
+🔍 **Busca Avançada:** Além das opções padrão (pesquisar por id, pesquisar por nome, listar todos) também são permitidas buscas mais específicas como busca por e-mail cadastrado e busca por planos de em uma faixa de preço específica. 
+🔑 **Autenticação:** Implementação de login e proteção de rotas, garantindo que apenas usuários autenticados acessem os recursos da API. 
+
+------
+
+## 3. Diagrama de Classes
+
+```mermaid
+classDiagram
+    class Usuario {
+        +number id
+        +string nome
+        +string usuario
+        +string senha
+        +string foto
+        +Apolice[] apolice
+    }
+
+    class Apolice {
+        +number id
+        +string plano
+        +number preco
+        +Date data_inicio
+        +Date data_fim
+        +number dependentes
+        +Usuario usuario
+        +Cliente cliente
+    }
+
+    class Cliente {
+        +number id
+        +string nome
+        +string email
+        +string telefone
+        +Date data_nascimento
+        +string foto
+        +Apolice[] apolice
+    }
+%%{init: {'theme':'dark', 'themeVariables': { 'primaryColor': '#2d2d2d', 'edgeColor': '#888888' }}}%%
+    direction LR
+    Usuario "1" --> "N" Apolice
+    Cliente "1" --> "N" Apolice
+```
+------
+
+## 4. Diagrama Entidade-Relacionamento (DER)
+--------
+```mermaid
+erDiagram
+	direction LR
+	USUARIO {
+		int id PK ""  
+		varchar nome  ""  
+		varchar usuario  ""  
+		varchar senha  ""  
+		varchar foto  ""  
+	}
+
+	APÓLICE {
+		int id PK ""  
+		varchar plano  ""  
+		decimal preco  ""  
+		date data_inicio  ""  
+		date data_fim  ""  
+		int dependentes  ""  
+		int usuarioId FK ""  
+		int clienteId FK ""  
+	}
+
+	CLIENTE {
+		int id PK ""  
+		varchar nome  ""  
+		varchar email  ""  
+		varchar telefone  ""  
+		date data_nascimento  ""  
+		varchar foto  ""  
+	}
+	
+%%{init: {'theme':'dark', 'themeVariables': { 'primaryColor': '#2d2d2d', 'edgeColor': '#888888' }}}%%
+	USUARIO||--o{APÓLICE:"gerencia"
+	CLIENTE||--o{APÓLICE:"contrata"
+```
+-----
+
+## 5. Estrutura de Pastas
+
+Inserir aqui a estrutura
+
+------
+
+## 6. Tecnologias utilizadas
+
+| Item                            | Descrição  |
+| ------------------------------- | ---------- |
+| 🖥️ **Servidor**                  | Node JS    |
+| ⌨️ **Linguagem de programação**  | TypeScript |
+| 🧩 **Framework**                 | Nest JS    |
+| 🌉 **ORM**                       | TypeORM    |
+| 🛢️ **Banco de dados Relacional** | MySQL      |
+
+------
+
+## 7. Configuração e Execução Local
+
+**1. 📥 Clone o repositório:**
+
+```bash
+git clone https://github.com/Javascript13-Grupo02/Projeto-integrador-03-VivaCare.git
+```
+**2. 📦 Instale as dependências:**
+```cmd
+npm install
+```
+**3. 🛢️ Configure o Banco de Dados:**
+
+Configure as credenciais do seu MySQL local (usuário, senha e nome do banco) no arquivo `dev.service.ts` na pasta `data` e modifique o arquivo `app.module.ts` de maneira que a seção de `imports` fique assim:
+
+```typescript
+imports: [
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRootAsync({
+	    useClass: DevService,
+      imports: [ConfigModule],
+    }),
+    UsuarioModule, ApoliceModule, AuthModule, ClienteModule
+  ]
+```
+
+**4. 🚀 Execute a Aplicação**
+
+```cmd
+npm run start:dev
+```
+------
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  Desenvolvido por <b>AllCare</b>.
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+<p align="center">
+  <img src="https://ik.imagekit.io/vjqejp2vh/proj03/Logo%20AllCare%20Cores%20Claras.png" alt="AllCare" width="300">
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ npm install
-```
-
-## Compile and run the project
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+   
