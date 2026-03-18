@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ClienteModule } from './cliente/cliente.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       database: 'db_vivacare',
       autoLoadEntities: true,
       synchronize: true,
-    })
+    }),
+    ClienteModule
   ],
   controllers: [],
   providers: [],
