@@ -25,11 +25,11 @@ A API foi construída seguindo os princípios da arquitetura de MVC com **NestJS
 
 ### 2.1. Principais Funcionalidades
 
-📂 **Gerenciamento de Clientes:** Cadastro, listagem, atualização e exclusão de clientes.
-📈 **Gerenciamento de Apólices:** Cadastro com planos, preços, datas de início/fim e dependentes.
-🔗 **Relacionamento entre  Usuário/Cliente e Apólice:** Garante que quando pesquisamos por um usuário (corretor) ou por um cliente sejam retornadas na pesquisa também as apólices associadas. 
-🔍 **Busca Avançada:** Além das opções padrão (pesquisar por id, pesquisar por nome, listar todos) também são permitidas buscas mais específicas como busca por e-mail cadastrado e busca por planos de em uma faixa de preço específica. 
-🔑 **Autenticação:** Implementação de login e proteção de rotas, garantindo que apenas usuários autenticados acessem os recursos da API. 
+📂 **Gerenciamento de Clientes:** Cadastro, listagem, atualização e exclusão de clientes.<br>
+📈 **Gerenciamento de Apólices:** Cadastro com planos, preços, datas de início/fim e dependentes.<br>
+🔗 **Relacionamento entre  Usuário/Cliente e Apólice:** Garante que quando pesquisamos por um usuário (corretor) ou por um cliente sejam retornadas na pesquisa também as apólices associadas. <br>
+🔍 **Busca Avançada:** Além das opções padrão (pesquisar por id, pesquisar por nome, listar todos) também são permitidas buscas mais específicas como busca por e-mail cadastrado e busca por planos de em uma faixa de preço específica. <br>
+🔑 **Autenticação:** Implementação de login e proteção de rotas, garantindo que apenas usuários autenticados acessem os recursos da API. <br>
 
 ------
 
@@ -114,7 +114,66 @@ erDiagram
 
 ## 5. Estrutura de Pastas
 
-Inserir aqui a estrutura
+```bash
+📦 Projeto-integrador-03-VivaCare
+ ┣ 📂 src
+ ┃ ┣ 📂 apolice                 # Módulo responsável pela gestão das Apólices de Seguro
+ ┃ ┃ ┣ 📂 controllers           # Controladores: recebem as requisições HTTP (GET, POST, etc.)
+ ┃ ┃ ┃ ┗ 📄 apolice.controller.ts
+ ┃ ┃ ┣ 📂 entities              # Entidades: mapeamento da tabela (tb_apolices) no banco
+ ┃ ┃ ┃ ┗ 📄 apolice.entity.ts
+ ┃ ┃ ┣ 📂 services              # Serviços: regras de negócio e comunicação com o banco
+ ┃ ┃ ┃ ┗ 📄 apolice.service.ts
+ ┃ ┃ ┗ 📄 apolice.module.ts     # Agrupador do módulo de apólices
+ ┃ ┃
+ ┃ ┣ 📂 auth                    # Módulo de Segurança e Autenticação
+ ┃ ┃ ┣ 📂 bcrypt                # Lógica de hash e criptografia de senhas
+ ┃ ┃ ┃ ┗ 📄 bcrypt.ts
+ ┃ ┃ ┣ 📂 constants             # Constantes globais
+ ┃ ┃ ┃ ┗ 📄 constants.ts
+ ┃ ┃ ┣ 📂 controllers           # Rotas de autenticação 
+ ┃ ┃ ┃ ┗ 📄 auth.controller.ts
+ ┃ ┃ ┣ 📂 entities              # Entidade auxiliar para o payload de dados no login
+ ┃ ┃ ┃ ┗ 📄 usuariologin.entity.ts
+ ┃ ┃ ┣ 📂 guard                 # Guardas de rota (proteção de endpoints fechados)
+ ┃ ┃ ┃ ┣ 📄 jwt-auth.guard.ts   # Valida se o usuário possui um Token JWT válido
+ ┃ ┃ ┃ ┗ 📄 local-auth.guard.ts # Valida se o e-mail e senha enviados estão corretos
+ ┃ ┃ ┣ 📂 services              # Lógica de validação de credenciais e geração de tokens
+ ┃ ┃ ┃ ┗ 📄 auth.service.ts
+ ┃ ┃ ┣ 📂 strategy              # Estratégias do Passport para a segurança
+ ┃ ┃ ┃ ┣ 📄 jwt.strategy.ts     # Estratégia de leitura do Token
+ ┃ ┃ ┃ ┗ 📄 local.strategy.ts   # Estratégia de leitura de login básico
+ ┃ ┃ ┗ 📄 auth.module.ts        # Agrupador do módulo de autenticação
+ ┃ ┃
+ ┃ ┣ 📂 cliente                 # Módulo responsável pela gestão dos Segurados
+ ┃ ┃ ┣ 📂 controllers           # Rotas de clientes
+ ┃ ┃ ┃ ┗ 📄 cliente.controller.ts
+ ┃ ┃ ┣ 📂 entities              # Entidade TypeORM (tb_clientes)
+ ┃ ┃ ┃ ┗ 📄 cliente.entity.ts
+ ┃ ┃ ┣ 📂 services              # Regras de negócio (ex: Validação de maioridade)
+ ┃ ┃ ┃ ┗ 📄 cliente.service.ts
+ ┃ ┃ ┗ 📄 cliente.module.ts     # Agrupador do módulo de clientes
+ ┃ ┃
+ ┃ ┣ 📂 usuario                 # Módulo responsável pelos Corretores (Admins do sistema)
+ ┃ ┃ ┣ 📂 controllers           # Rotas de usuários/corretores
+ ┃ ┃ ┃ ┗ 📄 usuario.controller.ts
+ ┃ ┃ ┣ 📂 entities              # Entidade TypeORM (tb_usuarios)
+ ┃ ┃ ┃ ┗ 📄 usuario.entity.ts
+ ┃ ┃ ┣ 📂 services              # Regras de negócio de usuários (ex: encriptar senha ao criar)
+ ┃ ┃ ┃ ┗ 📄 usuario.service.ts
+ ┃ ┃ ┗ 📄 usuario.module.ts     # Agrupador do módulo de usuários
+ ┃ ┃
+ ┃ ┣ 📂 util                    # Funções e classes utilitárias para todo o projeto
+ ┃ ┃ ┗ 📄 numerictransformer.ts # Conversor de precisão numérica (decimais) para o banco
+ ┃ ┃
+ ┃ ┣ 📄 app.controller.ts       # Controlador base (usado para redirecionar para o Swagger)
+ ┃ ┣ 📄 app.module.ts           # Módulo principal (Conexão global com o Banco de Dados)
+ ┃ ┣ 📄 app.service.ts          # Serviço principal (base estrutural do NestJS)
+ ┃ ┗ 📄 main.ts                 # Ponto de entrada (Configuração Swagger, CORS, ValidationPipe)
+ ┃
+ ┗ 📂 test                      # Testes E2E (End-to-End)
+   ┗ 📄 app.e2e-spec.ts         # Arquivo de testes automatizados de ponta a ponta
+```
 
 ------
 
@@ -127,6 +186,9 @@ Inserir aqui a estrutura
 | 🧩 **Framework**                 | Nest JS    |
 | 🌉 **ORM**                       | TypeORM    |
 | 🛢️ **Banco de dados Relacional** | MySQL      |
+| 🛂 **Autenticação** | Passport                          |
+| ✅ **Validação**    | class-validator + class-transform |
+| 📖 **Documentação** | Swagger (OpenAPI)                 |
 
 ------
 
