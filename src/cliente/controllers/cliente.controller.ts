@@ -1,10 +1,27 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
-import { Cliente } from "../entities/cliente.entity";
-import { ClienteService } from "../services/cliente.service";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
+import { Cliente } from '../entities/cliente.entity';
+import { ClienteService } from '../services/cliente.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
 
-@Controller("/clientes")
+@ApiTags('Clientes')
+@UseGuards(JwtAuthGuard)
+@Controller('/clientes')
+@ApiBearerAuth()
 export class ClienteController {
-  constructor(private readonly clienteService: ClienteService) { }
+  constructor(private readonly clienteService: ClienteService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -45,7 +62,6 @@ export class ClienteController {
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param('id', ParseIntPipe) id: number) {
-   return this.clienteService.delete(id)
+    return this.clienteService.delete(id);
   }
-
 }

@@ -1,11 +1,27 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
-import { Apolice } from "../entities/apolice.entity";
-import { ApoliceService } from "../services/apolice.service";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
+import { Apolice } from '../entities/apolice.entity';
+import { ApoliceService } from '../services/apolice.service';
+import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-
-@Controller("/apolices")
+@ApiTags('Apolices')
+@UseGuards(JwtAuthGuard)
+@Controller('/apolices')
+@ApiBearerAuth()
 export class ApoliceController {
-  constructor(private readonly apoliceService: ApoliceService) { }
+  constructor(private readonly apoliceService: ApoliceService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -54,5 +70,4 @@ export class ApoliceController {
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.apoliceService.delete(id);
   }
-
 }
