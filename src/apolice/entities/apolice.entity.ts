@@ -3,6 +3,7 @@ import { IsNotEmpty, IsNumber, IsPositive } from "class-validator"
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 import { NumericTransformer } from "../../util/numerictransformer"
 import { Cliente } from "../../cliente/entities/cliente.entity"
+import { Usuario } from "../../usuario/entities/usuario.entity"
 
 
 @Entity({ name: 'tb_apolice' })
@@ -46,4 +47,9 @@ export class Apolice {
         onDelete: "CASCADE"
     })
     cliente: Cliente
+
+    @ManyToOne(() => Usuario, (usuario) => usuario.apolice, {
+        onDelete: "CASCADE"
+    })
+    usuario: Usuario
 }

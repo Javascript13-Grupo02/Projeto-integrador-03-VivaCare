@@ -16,7 +16,8 @@ export class ApoliceService {
         return await this.apoliceRepository.find(
             {
                 relations: {
-                    cliente: true
+                    cliente: true,
+                    usuario: true
                 }
             }
         );
@@ -29,7 +30,8 @@ export class ApoliceService {
                 id
             },
             relations: {
-                cliente: true
+                cliente: true,
+                usuario: true
             }
         });
 
@@ -46,7 +48,8 @@ export class ApoliceService {
                 plano: Like(`%${plano}%`)
             },
             relations: {
-                cliente: true
+                cliente: true,
+                usuario: true
             }
         })
     }
@@ -86,7 +89,8 @@ export class ApoliceService {
                 preco: 'ASC'
             },
             relations: {
-                cliente: true
+                cliente: true,
+                usuario: true
             }
         })
     }
@@ -100,7 +104,8 @@ export class ApoliceService {
                 preco: 'DESC'
             },
             relations: {
-                cliente: true
+                cliente: true,
+                usuario: true
             }
         })
     }
