@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Cliente } from "../entities/cliente.entity";
-import { DeleteResult, ILike, Repository } from "typeorm";
+import { DeleteResult, ILike, Not, Repository } from "typeorm";
 import { differenceInYears } from "date-fns";
 
 @Injectable()
@@ -91,7 +91,12 @@ export class ClienteService {
         
         await this.findById(cliente.id);
 
-        const buscaCliente = await this.findByEmail(cliente.email);
+            const buscaCliente = await this.clienteRepository.findOne({
+        where: {
+            email: cliente.email,
+            id: Not(cliente.id),
+        },
+    });
 
         if (buscaCliente && buscaCliente.id !== cliente.id)
             throw new HttpException('Cliente (e-mail) já Cadastrado!', HttpStatus.BAD_REQUEST);
