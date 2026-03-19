@@ -8,6 +8,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'tb_apolice' })
 export class Apolice {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -45,6 +46,7 @@ export class Apolice {
   @IsNotEmpty()
   @IsPositive()
   @Column()
+  @ApiProperty()
   dependentes: number;
 
   // Relacionamento com cliente
