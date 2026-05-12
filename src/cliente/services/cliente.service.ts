@@ -3,14 +3,12 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Cliente } from "../entities/cliente.entity";
 import { DeleteResult, ILike, Not, Repository } from "typeorm";
 import { differenceInYears } from "date-fns";
-import { Bcrypt } from "../../auth/bcrypt/bcrypt";
 
 @Injectable()
 export class ClienteService {
     constructor(
         @InjectRepository(Cliente)
-        private clienteRepository: Repository<Cliente>,
-        private bcrypt: Bcrypt
+        private clienteRepository: Repository<Cliente> 
     ) { }
 
     async findAll(): Promise<Cliente[]> {
