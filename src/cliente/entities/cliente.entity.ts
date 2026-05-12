@@ -1,5 +1,5 @@
 import { Transform, TransformFnParams } from 'class-transformer';
-import { IsEmail, IsMobilePhone, IsNotEmpty } from 'class-validator';
+import { IsEmail, IsMobilePhone, IsNotEmpty, MinLength } from 'class-validator';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Apolice } from '../../apolice/entities/apolice.entity';
 import { ApiProperty } from '@nestjs/swagger';
@@ -43,6 +43,10 @@ export class Cliente {
   @ApiProperty()
   foto: string;
 
+  @Column({ length: 255, nullable: false })
+  @MinLength(8)
+  senha?: string;
+  
   // relacionamento com apolice
 
   @ApiProperty()

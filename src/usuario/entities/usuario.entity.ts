@@ -3,6 +3,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { Apolice } from '../../apolice/entities/apolice.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { Role } from '../role.enum';
 
 @Entity({ name: 'tb_usuarios' })
 export class Usuario {
@@ -35,6 +36,15 @@ export class Usuario {
   foto: string;
 
   @ApiProperty()
+    @Column({
+        type: 'enum',
+        enum: Role
+    })
+    roles: Role;
+
+  @ApiProperty()
   @OneToMany(() => Apolice, (apolice) => apolice.usuario)
   apolice: Apolice[];
 }
+export { Role };
+

@@ -3,12 +3,14 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Cliente } from "../entities/cliente.entity";
 import { DeleteResult, ILike, Not, Repository } from "typeorm";
 import { differenceInYears } from "date-fns";
+import { Bcrypt } from "../../auth/bcrypt/bcrypt";
 
 @Injectable()
 export class ClienteService {
     constructor(
         @InjectRepository(Cliente)
-        private clienteRepository: Repository<Cliente>
+        private clienteRepository: Repository<Cliente>,
+        private bcrypt: Bcrypt
     ) { }
 
     async findAll(): Promise<Cliente[]> {
@@ -97,7 +99,7 @@ export class ClienteService {
             id: Not(cliente.id),
         },
     });
-
+    
         if (buscaCliente && buscaCliente.id !== cliente.id)
             throw new HttpException('Cliente (e-mail) já Cadastrado!', HttpStatus.BAD_REQUEST);
 
@@ -109,6 +111,7 @@ export class ClienteService {
         
         return await this.clienteRepository.save(cliente);
     }
+
 
     async delete(id: number): Promise<DeleteResult> {
         
