@@ -45,7 +45,7 @@ export class ApoliceController {
 
   @UseGuards(RolesGuard) 
   @Roles(Role.Admin, Role.Corretor, Role.Cliente)
-  @Get('/:email')
+  @Get('email/:email')
   @HttpCode(HttpStatus.OK)
   findByEmail(@Param('email') email: string): Promise<Apolice[]> {
     return this.apoliceService.findByEmail(email);
@@ -53,7 +53,7 @@ export class ApoliceController {
 
   @UseGuards(RolesGuard) 
   @Roles(Role.Admin, Role.Corretor)
-  @Get('/preco_maior/:preco')
+  @Get('/maior/:preco')
   @HttpCode(HttpStatus.OK)
   findByPrecoMaior(@Param('preco') preco: number): Promise<Apolice[]> {
     return this.apoliceService.findByPrecoMaior(preco);
@@ -61,13 +61,13 @@ export class ApoliceController {
 
   @UseGuards(RolesGuard) 
   @Roles(Role.Admin, Role.Corretor)
-  @Get('/preco_menor/:preco')
+  @Get('/menor/:preco')
   @HttpCode(HttpStatus.OK)
   findByPrecoMenor(@Param('preco') preco: number): Promise<Apolice[]> {
     return this.apoliceService.findByPrecoMenor(preco);
   }
 
-  @Get('/:id')
+  @Get('id/:id')
   @HttpCode(HttpStatus.OK)
   findById(@Param('id') id: number): Promise<Apolice> {
     return this.apoliceService.findById(id);
@@ -75,7 +75,7 @@ export class ApoliceController {
 
   @UseGuards(RolesGuard) 
   @Roles(Role.Admin, Role.Corretor)
-  @Post()
+  @Post('/cadastrar')
   @HttpCode(HttpStatus.CREATED)
   post(@Body() apolice: Apolice): Promise<Apolice> {
     return this.apoliceService.create(apolice);
@@ -83,7 +83,7 @@ export class ApoliceController {
 
   @UseGuards(RolesGuard) 
   @Roles(Role.Admin, Role.Corretor)
-  @Put()
+  @Put('/atualizar')
   @HttpCode(HttpStatus.OK)
   put(@Body() apolice: Apolice): Promise<Apolice> {
     return this.apoliceService.update(apolice);
