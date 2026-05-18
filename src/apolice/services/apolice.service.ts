@@ -23,6 +23,26 @@ export class ApoliceService {
         );
     }
 
+    async findByEmail(email: string): Promise<Apolice> {
+        const apoliceEncontrada = await this.apoliceRepository.findOne({
+            where: {
+                cliente: {
+                    email: email
+                }
+            },
+            relations: {
+                cliente: true,
+                usuario: true
+            }
+        });
+
+        if (!apoliceEncontrada) {
+            throw new HttpException(`Email ${email} não encontrado!`, HttpStatus.NOT_FOUND);
+        }
+
+        return apoliceEncontrada;
+    }
+
     async findById(id: number): Promise<Apolice> {
 
         let apolice = await this.apoliceRepository.findOne({

@@ -44,6 +44,14 @@ export class ApoliceController {
   }
 
   @UseGuards(RolesGuard) 
+  @Roles(Role.Admin, Role.Corretor, Role.Cliente)
+  @Get('/:email')
+  @HttpCode(HttpStatus.OK)
+  findByEmail(@Param('email') email: string): Promise<Apolice> {
+    return this.apoliceService.findByEmail(email);
+  }
+
+  @UseGuards(RolesGuard) 
   @Roles(Role.Admin, Role.Corretor)
   @Get('/preco_maior/:preco')
   @HttpCode(HttpStatus.OK)
