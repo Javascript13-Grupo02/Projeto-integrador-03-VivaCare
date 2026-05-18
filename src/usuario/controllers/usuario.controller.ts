@@ -12,11 +12,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsuarioService } from '../services/usuario.service';
-import { Role, Usuario } from '../entities/usuario.entity';
+import { Usuario } from '../entities/usuario.entity';
 import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { RolesGuard } from '../../auth/guard/roles.guard';
+import { Role } from '../role.enum';
 
 @ApiTags('Usuario')
 @Controller('/usuarios')

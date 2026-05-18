@@ -46,5 +46,5 @@ export class Usuario {
   @OneToMany(() => Apolice, (apolice) => apolice.usuario)
   apolice: Apolice[];
 }
-export { Role };
+
 
