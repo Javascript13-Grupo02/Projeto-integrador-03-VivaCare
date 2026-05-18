@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
   UseGuards,
@@ -34,13 +35,6 @@ export class ApoliceController {
     return this.apoliceService.findAll();
   }
 
- 
-  @Get('/:id')
-  @HttpCode(HttpStatus.OK)
-  findById(@Param('id') id: number): Promise<Apolice> {
-    return this.apoliceService.findById(id);
-  }
-
   @UseGuards(RolesGuard) 
   @Roles(Role.Admin, Role.Corretor)
   @Get('/plano/:plano')
@@ -63,6 +57,12 @@ export class ApoliceController {
   @HttpCode(HttpStatus.OK)
   findByPrecoMenor(@Param('preco') preco: number): Promise<Apolice[]> {
     return this.apoliceService.findByPrecoMenor(preco);
+  }
+
+  @Get('/:id')
+  @HttpCode(HttpStatus.OK)
+  findById(@Param('id') id: number): Promise<Apolice> {
+    return this.apoliceService.findById(id);
   }
 
   @UseGuards(RolesGuard) 

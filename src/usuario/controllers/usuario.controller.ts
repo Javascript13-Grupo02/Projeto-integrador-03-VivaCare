@@ -33,14 +33,14 @@ export class UsuarioController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  @Get('/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard) 
+  @Roles(Role.Admin, Role.Corretor, Role.Cliente)
+  @Get('one/:usuario')
   @HttpCode(HttpStatus.OK)
-  findById(@Param('id', ParseIntPipe) id: number): Promise<Usuario> {
-    return this.usuarioService.findById(id);
+  findByUsuarioController(@Param('usuario') usuario: string): Promise<Usuario | null> {
+    return this.usuarioService.findByUsuarioController(usuario);
   }
 
-  
   @Post('/cadastrar')
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() usuario: Usuario): Promise<Usuario> {
@@ -54,6 +54,14 @@ export class UsuarioController {
   @HttpCode(HttpStatus.OK)
   async update(@Body() usuario: Usuario): Promise<Usuario> {
     return this.usuarioService.update(usuario);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('/:id')
+  @HttpCode(HttpStatus.OK)
+  findById(@Param('id', ParseIntPipe) id: number): Promise<Usuario> {
+    return this.usuarioService.findById(id);
   }
 
   @ApiBearerAuth()

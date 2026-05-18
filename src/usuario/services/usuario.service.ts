@@ -21,6 +21,21 @@ export class UsuarioService {
         })
     }
 
+    async findByUsuarioController(usuario: string): Promise<Usuario> {
+       const usuarioEncontrado = await this.usuarioRepository.findOne({
+            where: { usuario: usuario },
+              relations: {
+                apolice: true
+            }
+        });
+
+        if (!usuarioEncontrado) {
+            throw new HttpException(`Usuario ${usuario} não encontrado!`, HttpStatus.NOT_FOUND);
+        }
+
+         return usuarioEncontrado;
+    }
+
     async findAll(): Promise<Usuario[]> {
         return await this.usuarioRepository.find({
             relations: {
@@ -69,8 +84,6 @@ export class UsuarioService {
         usuario.senha = await this.bcrypt.criptografarSenha(usuario.senha)
         return await this.usuarioRepository.save(usuario);
     }
-
-
 
     
     // Deletar condicional à quem está deletando ser 'admin' e quem está sendo deletado ser 'user'.

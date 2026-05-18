@@ -7,8 +7,8 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { Cliente } from '../entities/cliente.entity';
@@ -64,11 +64,10 @@ export class ClienteController {
     return this.clienteService.create(cliente);
   }
 
-  //Mudei o tipo de requisição para que seja necessário mudar apenas algumas partes
   @UseGuards(JwtAuthGuard)
-  @Patch()
+  @Put()
   @HttpCode(HttpStatus.OK)
-  patch(@Body() cliente: Cliente): Promise<Cliente> {
+  put(@Body() cliente: Cliente): Promise<Cliente> {
     return this.clienteService.update(cliente);
   }
 

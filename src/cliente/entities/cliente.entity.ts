@@ -42,10 +42,6 @@ export class Cliente {
   @Column({ length: 255, nullable: false })
   @ApiProperty()
   foto: string;
-
-  @Column({ length: 255, nullable: false })
-  @MinLength(8)
-  senha?: string;
   
   // relacionamento com apolice
 
