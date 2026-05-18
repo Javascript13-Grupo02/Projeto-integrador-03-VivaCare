@@ -47,7 +47,7 @@ export class ApoliceController {
   @Roles(Role.Admin, Role.Corretor, Role.Cliente)
   @Get('/:email')
   @HttpCode(HttpStatus.OK)
-  findByEmail(@Param('email') email: string): Promise<Apolice> {
+  findByEmail(@Param('email') email: string): Promise<Apolice[]> {
     return this.apoliceService.findByEmail(email);
   }
 

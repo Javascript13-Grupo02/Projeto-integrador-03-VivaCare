@@ -23,8 +23,8 @@ export class ApoliceService {
         );
     }
 
-    async findByEmail(email: string): Promise<Apolice> {
-        const apoliceEncontrada = await this.apoliceRepository.findOne({
+    async findByEmail(email: string): Promise<Apolice[]> {
+        const apoliceEncontrada = await this.apoliceRepository.find({
             where: {
                 cliente: {
                     email: email
