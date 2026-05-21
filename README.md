@@ -29,7 +29,7 @@ A API foi construída seguindo os princípios da arquitetura de MVC com **NestJS
 📈 **Gerenciamento de Apólices:** Cadastro com planos, preços, datas de início/fim e dependentes.<br>
 🔗 **Relacionamento entre  Usuário/Cliente e Apólice:** Garante que quando pesquisamos por um usuário (corretor) ou por um cliente sejam retornadas na pesquisa também as apólices associadas. <br>
 🔍 **Busca Avançada:** Além das opções padrão (pesquisar por id, pesquisar por nome, listar todos) também são permitidas buscas mais específicas como busca por e-mail cadastrado e busca por planos de em uma faixa de preço específica. <br>
-🔑 **Autenticação:** Implementação de login e proteção de rotas, garantindo que apenas usuários autenticados acessem os recursos da API. <br>
+🔑 **Autenticação e Autorização:** Implementação de login e proteção de rotas via JWT integrada a um controle de acesso baseado em funções de usuários (**RBAC - Role-Based Access Control**), divididos em três permissões dinâmicas: Admin, Corretor e Cliente. <br>
 
 ------
 
@@ -43,6 +43,7 @@ classDiagram
         +string usuario
         +string senha
         +string foto
+		+Role role
         +Apolice[] apolice
     }
 
@@ -83,7 +84,8 @@ erDiagram
 		varchar nome  ""  
 		varchar usuario  ""  
 		varchar senha  ""  
-		varchar foto  ""  
+		varchar foto  ""
+		varchar role  ""  
 	}
 
 	APÓLICE {
@@ -126,18 +128,21 @@ erDiagram
  ┃ ┃ ┃ ┗ 📄 apolice.service.ts
  ┃ ┃ ┗ 📄 apolice.module.ts     # Agrupador do módulo de apólices
  ┃ ┃
- ┃ ┣ 📂 auth                    # Módulo de Segurança e Autenticação
+ ┃ ┣ 📂 auth                    # Módulo de Segurança, Autenticação e Autorização
  ┃ ┃ ┣ 📂 bcrypt                # Lógica de hash e criptografia de senhas
  ┃ ┃ ┃ ┗ 📄 bcrypt.ts
  ┃ ┃ ┣ 📂 constants             # Constantes globais
  ┃ ┃ ┃ ┗ 📄 constants.ts
  ┃ ┃ ┣ 📂 controllers           # Rotas de autenticação 
  ┃ ┃ ┃ ┗ 📄 auth.controller.ts
+ ┃ ┃ ┣ 📂 decorators            # Decorators customizados para validação de acesso
+ ┃ ┃ ┃ ┗ 📄 roles.decorator.ts  # Anexa os níveis de permissão permitidos nas rotas
  ┃ ┃ ┣ 📂 entities              # Entidade auxiliar para o payload de dados no login
  ┃ ┃ ┃ ┗ 📄 usuariologin.entity.ts
  ┃ ┃ ┣ 📂 guard                 # Guardas de rota (proteção de endpoints fechados)
  ┃ ┃ ┃ ┣ 📄 jwt-auth.guard.ts   # Valida se o usuário possui um Token JWT válido
- ┃ ┃ ┃ ┗ 📄 local-auth.guard.ts # Valida se o e-mail e senha enviados estão corretos
+ ┃ ┃ ┃ ┣ 📄 local-auth.guard.ts # Valida se o e-mail e senha enviados estão corretos
+ ┃ ┃ ┃ ┗ 📄 roles.guard.ts      # Restringe o acesso com base no cargo do usuário (RBAC)
  ┃ ┃ ┣ 📂 services              # Lógica de validação de credenciais e geração de tokens
  ┃ ┃ ┃ ┗ 📄 auth.service.ts
  ┃ ┃ ┣ 📂 strategy              # Estratégias do Passport para a segurança
@@ -154,13 +159,14 @@ erDiagram
  ┃ ┃ ┃ ┗ 📄 cliente.service.ts
  ┃ ┃ ┗ 📄 cliente.module.ts     # Agrupador do módulo de clientes
  ┃ ┃
- ┃ ┣ 📂 usuario                 # Módulo responsável pelos Corretores (Admins do sistema)
+ ┃ ┣ 📂 usuario                 # Módulo responsável pelos Usuários (Admins, Corretores e Clientes)
  ┃ ┃ ┣ 📂 controllers           # Rotas de usuários/corretores
  ┃ ┃ ┃ ┗ 📄 usuario.controller.ts
  ┃ ┃ ┣ 📂 entities              # Entidade TypeORM (tb_usuarios)
  ┃ ┃ ┃ ┗ 📄 usuario.entity.ts
  ┃ ┃ ┣ 📂 services              # Regras de negócio de usuários (ex: encriptar senha ao criar)
  ┃ ┃ ┃ ┗ 📄 usuario.service.ts
+ ┃ ┃ ┣ 📄 role.enum.ts          # Enum com as definições de níveis de acesso (Admin, Corretor, Cliente)
  ┃ ┃ ┗ 📄 usuario.module.ts     # Agrupador do módulo de usuários
  ┃ ┃
  ┃ ┣ 📂 util                    # Funções e classes utilitárias para todo o projeto
@@ -186,7 +192,7 @@ erDiagram
 | 🧩 **Framework**                 | Nest JS    |
 | 🌉 **ORM**                       | TypeORM    |
 | 🛢️ **Banco de dados Relacional** | MySQL      |
-| 🛂 **Autenticação** | Passport                          |
+| 🛂 **Autenticação e Controle**   | Passport + Guards (JWT & RBAC) |
 | ✅ **Validação**    | class-validator + class-transform |
 | 📖 **Documentação** | Swagger (OpenAPI)                 |
 
